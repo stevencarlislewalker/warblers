@@ -1,0 +1,102 @@
+\documentclass{article}
+\usepackage{amsmath}
+
+\title{Warbler conservation model}
+
+\begin{document}
+
+\maketitle
+
+\section{Model}
+
+Subscripts are $i$ for site and $t$ for time.  Superscripts are $B$
+for blue wing, $G$ for golden wing, $G|B$ for golden wing given
+presence blue wing, and $G|\tilde{B}$ golden wing given absence of
+blue wing.  We use $A$ to represent $B$, $G|B$, or $G|\tilde{B}$.
+
+For variables we have, $y$ for observed detections, $z$ for latent
+occupancy, $p$ for detection probabilties, $\psi$ for occupancy
+probabilities, and $x$ for covariates
+
+\subsection{Detection model, p, z to y}
+
+\begin{equation}
+  \label{eq:1}
+  y_{i,t}^B | p_{i,t}^B, z_{i,t}^B \sim Bern(p_{i,t}^B z_{i,t}^B)
+\end{equation}
+\begin{equation}
+  \label{eq:2}
+  y_{i,t}^G | p_{i,t}^{G|B}, p_{i,t}^{G|\tilde{B}}, z_{i,t}^B, z_{i,t}^G \sim Bern(z_{i,t}^G [z_{i,t}^B p_{i,t}^{G|B} + (1-z_{i,t}^B)p_{i,t}^{G|\tilde{B}}])
+\end{equation}
+
+\subsection{Occurrence model, psi to z}
+
+For all years other than the first year (i.e. $t > 1$), we have the
+following expression for the probability of occurrence of the blue
+wing,
+\begin{equation}
+  \label{eq:6}
+  \psi_{i,t}^B = z_{i,t-1}^B [1-\epsilon_{t-1}^B] + [1-z_{i,t-1}^B] \gamma_{t-1}^B,
+\end{equation}
+and the probability for the golden wing as,
+\begin{equation}
+  \label{eq:8}
+  \begin{split}
+    \psi_{i,t}^G = & \underbrace{z_{i,t-1}^B z_{i,t-1}^G}_{\text{(both
+        present)}}
+    \underbrace{(1-\epsilon_{i,t-1}^{G|B})}_{\text{(G does not go extinct)}} + \\
+    & \underbrace{z_{i,t-1}^B (1-z_{i,t-1}^G)}_{\text{(B present but not G)}}
+    \underbrace{(\gamma_{i,t-1}^{G|B})}_{\text{(G colonizes)}} + \\
+      & \underbrace{(1-z_{i,t-1}^B) z_{i,t-1}^G}_{\text{(G present but
+          not B)}}
+      \underbrace{(1-\epsilon_{i,t-1}^{G|\tilde{B}})}_{\text{(G does not go extinct)}} +\\
+      & \underbrace{(1-z_{i,t-1}^B)(1-z_{i,t-1}^G)}_{\text{(both absent)}}
+      \underbrace{(\gamma_{i,t-1}^{G|\tilde{B}})}_{\text{(G colonizes)}} \\
+  \end{split}
+\end{equation}
+Note that $\epsilon$'s and $\gamma$'s mean extinction and colonization
+probabilities.
+
+These occurrence probabilities can be used to specify a Bernoulli
+distribution for the occurrences,
+\begin{equation}
+  \label{eq:1}
+  z_{i,t}^B | \psi_{i,t-1}^B \sim Bern(\psi_{i,t-1}^B)
+\end{equation}
+\begin{equation}
+  \label{eq:2}
+  z_{i,t}^G | \psi_{i,t-1}^G \sim Bern(\psi_{i,t-1}^G)
+\end{equation}
+
+
+\subsection{GLMs}
+
+The extinction and colonization parameters linearly depend on
+environmental and spatial variables on the the logit scale,
+\begin{equation}
+  \label{eq:7}
+  logit(\epsilon_{i, t}^A) = \sum_{j=1} \beta_j^A x_{i, t, j}^A
+\end{equation}
+\begin{equation}
+  \label{eq:7}
+  logit(\gamma_{i, t}^A) = \sum_{j=1} \beta_j^A x_{i, t, j}^A
+\end{equation}
+where the superscripts $A$ refer to either $B$, $G|B$, or $G|\tilde{B}$.
+
+We also need to model the effects of covariates on the detection
+probabilities,
+\begin{equation}
+  logit(p_{i, t}^A) = \sum_{j=1} \alpha_j^A x_{i, t, j}^A
+\end{equation}
+
+Note that $j$ subscripts represent different covariates.  Also note
+that we could have different covariates for each of the logit-scale
+equations.  Finally, note that there are three equations for each
+logit-scale equation (i.e. for $A = B, G|B, G|\tilde{B}$).
+
+\subsection{Priors}
+
+Diffuse normals on $\beta$'s and $\alpha$'s.
+
+\end{document}
+
