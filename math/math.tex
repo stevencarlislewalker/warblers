@@ -75,18 +75,18 @@ The extinction and colonization parameters linearly depend on
 environmental and spatial variables on the the logit scale,
 \begin{equation}
   \label{eq:7}
-  logit(\epsilon_{i, t}^A) = \sum_{j=1} \beta_j^A x_{i, t, j}^A
+  logit(\epsilon_{i, t}^A) = \sum_{j=1} \beta_j^{A,\epsilon} x_{i, t, j}^A
 \end{equation}
 \begin{equation}
   \label{eq:7}
-  logit(\gamma_{i, t}^A) = \sum_{j=1} \beta_j^A x_{i, t, j}^A
+  logit(\gamma_{i, t}^A) = \sum_{j=1} \beta_j^{A,\gamma} x_{i, t, j}^A
 \end{equation}
 where the superscripts $A$ refer to either $B$, $G|B$, or $G|\tilde{B}$.
 
 We also need to model the effects of covariates on the detection
 probabilities,
 \begin{equation}
-  logit(p_{i, t}^A) = \sum_{j=1} \alpha_j^A x_{i, t, j}^A
+  logit(p_{i, t}^A) = \sum_{j=1} \beta_j^{A,p} x_{i, t, j}^A
 \end{equation}
 
 Note that $j$ subscripts represent different covariates.  Also note
